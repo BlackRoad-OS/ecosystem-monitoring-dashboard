@@ -1,428 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlackRoad Ecosystem - Live Status Dashboard</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            background: #000;
-            color: #0f0;
-            padding: 2rem;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: linear-gradient(135deg, #FF9D00, #FF0066, #7700FF, #0066FF);
-            border-radius: 12px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
-
-        .header p {
-            color: rgba(255,255,255,0.9);
-            font-size: 1.1rem;
-        }
-
-        .stats-banner {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-box {
-            background: rgba(0, 255, 0, 0.05);
-            border: 1px solid #0f0;
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            color: #0f0;
-            text-shadow: 0 0 10px #0f0;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .domains-grid {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .domain-card {
-            background: rgba(0, 255, 0, 0.03);
-            border: 1px solid #0f0;
-            padding: 1.5rem;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        .domain-card:hover {
-            background: rgba(0, 255, 0, 0.08);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-        }
-
-        .domain-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .domain-info a {
-            color: #0af;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .domain-info a:hover {
-            text-decoration: underline;
-        }
-
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .status-live { background: #0f0; }
-        .status-building { background: #ff0; }
-        .status-pending { background: #f90; }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .category {
-            margin-bottom: 3rem;
-        }
-
-        .category-header {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: #FF9D00;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #FF9D00;
-        }
-
-        .footer {
-            margin-top: 4rem;
-            text-align: center;
-            padding: 2rem;
-            border-top: 1px solid #0f0;
-            opacity: 0.7;
-        }
-
-        .refresh-btn {
-            background: #0f0;
-            color: #000;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 2rem auto;
-            display: block;
-        }
-
-        .refresh-btn:hover {
-            background: #0af;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlackRoad Empire Dashboard</title>
+  <style>
+    :root {
+      --amber: #F5A623;
+      --pink: #FF1D6C;
+      --blue: #2979FF;
+      --violet: #9C27B0;
+      --green: #00C853;
+      --red: #FF1744;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      background: #000; 
+      color: #fff; 
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+      min-height: 100vh;
+    }
+    .header {
+      background: linear-gradient(135deg, rgba(245,166,35,0.1), rgba(255,29,108,0.1));
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 1px solid #222;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--amber), var(--pink), var(--blue), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header p { color: #888; margin-top: 0.5rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #111, #0a0a0a);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #222;
+      text-align: center;
+    }
+    .stat-card h3 { color: #666; font-size: 0.9rem; text-transform: uppercase; }
+    .stat-card .value { 
+      font-size: 2.5rem; 
+      font-weight: bold;
+      background: linear-gradient(135deg, var(--amber), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .section { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+    .section h2 { 
+      color: var(--amber); 
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .service-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.2s;
+    }
+    .service-card:hover {
+      border-color: var(--amber);
+      transform: translateY(-2px);
+    }
+    .service-card h4 { color: #fff; margin-bottom: 0.5rem; }
+    .service-card p { color: #666; font-size: 0.85rem; margin-bottom: 1rem; }
+    .service-card .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .status.live { background: rgba(0,200,83,0.2); color: var(--green); }
+    .status.pending { background: rgba(245,166,35,0.2); color: var(--amber); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; animation: pulse 2s infinite; }
+    .live .status-dot { background: var(--green); }
+    .pending .status-dot { background: var(--amber); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .link { color: var(--blue); text-decoration: none; font-size: 0.85rem; }
+    .link:hover { text-decoration: underline; }
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #444;
+      border-top: 1px solid #222;
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🌐 BlackRoad Ecosystem Dashboard</h1>
-        <p>Live monitoring of all 20 domains | Auto-refreshing</p>
+  <div class="header">
+    <h1>🖤 BlackRoad Empire Dashboard</h1>
+    <p>Real-time status of all BlackRoad OS services and deployments</p>
+  </div>
+  
+  <div class="stats">
+    <div class="stat-card">
+      <h3>Total Repos</h3>
+      <div class="value">588</div>
     </div>
-
-    <div class="stats-banner">
-        <div class="stat-box">
-            <div class="stat-number">20</div>
-            <div class="stat-label">Total Domains</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number" id="liveCount">0</div>
-            <div class="stat-label">Live Sites</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Automation</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-number">$0</div>
-            <div class="stat-label">Monthly Cost</div>
-        </div>
+    <div class="stat-card">
+      <h3>Organizations</h3>
+      <div class="value">15</div>
     </div>
-
-    <div class="category">
-        <div class="category-header">🚀 Main Platforms (5)</div>
-        <div class="domains-grid">
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroad.io</h3>
-                    <a href="https://blackroad.io" target="_blank">https://blackroad.io</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroad.systems</h3>
-                    <a href="https://blackroad.systems" target="_blank">https://blackroad.systems</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>lucidia.earth</h3>
-                    <a href="https://lucidia.earth" target="_blank">https://lucidia.earth</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroad.me</h3>
-                    <a href="https://blackroad.me" target="_blank">https://blackroad.me</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroad.company</h3>
-                    <a href="https://blackroad.company" target="_blank">https://blackroad.company</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-        </div>
+    <div class="stat-card">
+      <h3>Cloudflare Pages</h3>
+      <div class="value">50+</div>
     </div>
-
-    <div class="category">
-        <div class="category-header">⚛️ Quantum Suite (5)</div>
-        <div class="domains-grid">
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadquantum.com</h3>
-                    <a href="https://blackroadquantum.com" target="_blank">https://blackroadquantum.com</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadquantum.info</h3>
-                    <a href="https://blackroadquantum.info" target="_blank">https://blackroadquantum.info</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadquantum.net</h3>
-                    <a href="https://blackroadquantum.net" target="_blank">https://blackroadquantum.net</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadquantum.shop</h3>
-                    <a href="https://blackroadquantum.shop" target="_blank">https://blackroadquantum.shop</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadquantum.store</h3>
-                    <a href="https://blackroadquantum.store" target="_blank">https://blackroadquantum.store</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-        </div>
+    <div class="stat-card">
+      <h3>Microservices</h3>
+      <div class="value">24</div>
     </div>
+  </div>
 
-    <div class="category">
-        <div class="category-header">🤖 AI Domains (5)</div>
-        <div class="domains-grid">
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadai.com</h3>
-                    <a href="https://blackroadai.com" target="_blank">https://blackroadai.com</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadqi.com</h3>
-                    <a href="https://blackroadqi.com" target="_blank">https://blackroadqi.com</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>lucidiaqi.com</h3>
-                    <a href="https://lucidiaqi.com" target="_blank">https://lucidiaqi.com</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>aliceqi.com</h3>
-                    <a href="https://aliceqi.com" target="_blank">https://aliceqi.com</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>lucidia.studio</h3>
-                    <a href="https://lucidia.studio" target="_blank">https://lucidia.studio</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-        </div>
+  <div class="section">
+    <h2>🌐 Live Domains</h2>
+    <div class="grid">
+      <div class="service-card">
+        <h4>blackroad.io</h4>
+        <p>Main website & landing page</p>
+        <span class="status live"><span class="status-dot"></span>Live</span>
+        <a href="https://blackroad.io" class="link" target="_blank">Visit →</a>
+      </div>
+      <div class="service-card">
+        <h4>docs.blackroad.io</h4>
+        <p>Documentation portal</p>
+        <span class="status live"><span class="status-dot"></span>Live</span>
+        <a href="https://docs.blackroad.io" class="link" target="_blank">Visit →</a>
+      </div>
+      <div class="service-card">
+        <h4>brand.blackroad.io</h4>
+        <p>Brand & design system</p>
+        <span class="status live"><span class="status-dot"></span>Live</span>
+        <a href="https://brand.blackroad.io" class="link" target="_blank">Visit →</a>
+      </div>
+      <div class="service-card">
+        <h4>lucidia.earth</h4>
+        <p>Lucidia AI platform</p>
+        <span class="status live"><span class="status-dot"></span>Live</span>
+        <a href="https://lucidia.earth" class="link" target="_blank">Visit →</a>
+      </div>
     </div>
+  </div>
 
-    <div class="category">
-        <div class="category-header">⛓️ Blockchain (2) + 🏢 Corporate (3)</div>
-        <div class="domains-grid">
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>roadchain.io</h3>
-                    <a href="https://roadchain.io" target="_blank">https://roadchain.io</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>roadcoin.io</h3>
-                    <a href="https://roadcoin.io" target="_blank">https://roadcoin.io</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackboxprogramming.io</h3>
-                    <a href="https://blackboxprogramming.io" target="_blank">https://blackboxprogramming.io</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroadinc.us</h3>
-                    <a href="https://blackroadinc.us" target="_blank">https://blackroadinc.us</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-building"></div>
-                    <span>BUILDING</span>
-                </div>
-            </div>
-            <div class="domain-card">
-                <div class="domain-info">
-                    <h3>blackroad.network</h3>
-                    <a href="https://blackroad.network" target="_blank">https://blackroad.network</a>
-                </div>
-                <div class="status">
-                    <div class="status-dot status-live"></div>
-                    <span>LIVE</span>
-                </div>
-            </div>
-        </div>
+  <div class="section">
+    <h2>⚡ Microservices</h2>
+    <div class="grid">
+      <div class="service-card">
+        <h4>roadconfig</h4>
+        <p>Configuration management</p>
+        <span class="status live"><span class="status-dot"></span>TypeScript + Python + Go</span>
+      </div>
+      <div class="service-card">
+        <h4>roadcache</h4>
+        <p>Distributed caching</p>
+        <span class="status live"><span class="status-dot"></span>TypeScript + Python + Go</span>
+      </div>
+      <div class="service-card">
+        <h4>roadmetrics</h4>
+        <p>Observability & metrics</p>
+        <span class="status live"><span class="status-dot"></span>TypeScript + Python + Go</span>
+      </div>
+      <div class="service-card">
+        <h4>roadevents</h4>
+        <p>Event streaming</p>
+        <span class="status live"><span class="status-dot"></span>TypeScript + Python + Go</span>
+      </div>
+      <div class="service-card">
+        <h4>roadqueue</h4>
+        <p>Message queue</p>
+        <span class="status live"><span class="status-dot"></span>TypeScript + Python + Go</span>
+      </div>
+      <div class="service-card">
+        <h4>roadhealth</h4>
+        <p>Health monitoring</p>
+        <span class="status live"><span class="status-dot"></span>TypeScript + Python + Go</span>
+      </div>
     </div>
+  </div>
 
-    <button class="refresh-btn" onclick="location.reload()">🔄 Refresh Status</button>
-
-    <div class="footer">
-        <p>🚀 BlackRoad Ecosystem Monitoring Dashboard</p>
-        <p style="margin-top: 0.5rem;">Auto-deployed from GitHub | Powered by Cloudflare Pages</p>
-        <p style="margin-top: 1rem; font-size: 0.8rem;">Last updated: <span id="timestamp"></span></p>
+  <div class="section">
+    <h2>📦 Industry Packs</h2>
+    <div class="grid">
+      <div class="service-card">
+        <h4>Healthcare Pack</h4>
+        <p>HIPAA-compliant infrastructure</p>
+        <span class="status live"><span class="status-dot"></span>Ready</span>
+      </div>
+      <div class="service-card">
+        <h4>Engineering Pack</h4>
+        <p>CAD & engineering tools</p>
+        <span class="status live"><span class="status-dot"></span>Ready</span>
+      </div>
+      <div class="service-card">
+        <h4>Finance Pack</h4>
+        <p>Financial services tools</p>
+        <span class="status live"><span class="status-dot"></span>Ready</span>
+      </div>
+      <div class="service-card">
+        <h4>Legal Pack</h4>
+        <p>Legal & compliance tools</p>
+        <span class="status live"><span class="status-dot"></span>Ready</span>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Update timestamp
-        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+  <div class="section">
+    <h2>🤖 AI Systems</h2>
+    <div class="grid">
+      <div class="service-card">
+        <h4>Codex Infinity</h4>
+        <p>Infinite code indexing - PS-SHA-∞</p>
+        <span class="status live"><span class="status-dot"></span>8,789 components</span>
+      </div>
+      <div class="service-card">
+        <h4>Agent Registry</h4>
+        <p>30K agent orchestration</p>
+        <span class="status live"><span class="status-dot"></span>Active</span>
+      </div>
+      <div class="service-card">
+        <h4>Lucidia Lab</h4>
+        <p>AI research laboratory</p>
+        <span class="status live"><span class="status-dot"></span>Active</span>
+      </div>
+      <div class="service-card">
+        <h4>Memory System</h4>
+        <p>Multi-Claude coordination</p>
+        <span class="status live"><span class="status-dot"></span>Active</span>
+      </div>
+    </div>
+  </div>
 
-        // Count live sites
-        const liveCount = document.querySelectorAll('.status-live').length;
-        document.getElementById('liveCount').textContent = liveCount;
+  <div class="footer">
+    <p>🖤 BlackRoad OS, Inc. © 2024-2026 | Updated: <span id="time"></span></p>
+  </div>
 
-        // Auto-refresh every 30 seconds
-        setTimeout(() => location.reload(), 30000);
-    </script>
+  <script>
+    document.getElementById('time').textContent = new Date().toISOString();
+    setInterval(() => {
+      document.getElementById('time').textContent = new Date().toISOString();
+    }, 1000);
+  </script>
 </body>
 </html>
